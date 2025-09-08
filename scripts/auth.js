@@ -1,61 +1,52 @@
+// При загрузке проверяем, есть ли сохраненные данные пользователя
 document.addEventListener('DOMContentLoaded', function() {
-    const authContainer = document.getElementById('auth-container');
-    const appContainer = document.getElementById('app-container');
-    const loginBtn = document.getElementById('login-btn');
-    const phoneInput = document.getElementById('phone');
-    const usernameSpan = document.getElementById('username');
-    
-    // Проверяем, авторизован ли пользователь
-    const currentUser = localStorage.getItem('currentUser');
-    if (currentUser) {
-        const user = JSON.parse(currentUser);
-        showApp(user);
-    }
-    
-    // Обработка входа
-    loginBtn.addEventListener('click', function() {
-        const phone = phoneInput.value.trim();
+    const savedUser = localStorage.getItem('currentUser');
+    if (savedUser) {
+        const user = JSON.parse(savedUser);
+        document.getElementById('app-container').classList.remove('hidden');
+        document.getElementById('auth-container').classList.add('hidden');
+        document.getElementById('username').textContent = user.name;
         
-        if (!phone) {
-            alert('Пожалуйста, введите номер телефона');
-            return;
-        }
-        
-        // Генерируем случайное имя пользователя
-        const username = 'User' + Math.floor(Math.random() * 10000);
-        const user = {
-            id: generateId(),
-            phone: phone,
-            username: username,
-            avatar: 'assets/icons/user-default.png'
-        };
-        
-        // Сохраняем пользователя
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        
-        // Добавляем пользователя в список (если его там нет)
-        let users = JSON.parse(localStorage.getItem('users') || '[]');
-        const userExists = users.some(u => u.phone === phone);
-        
-        if (!userExists) {
-            users.push(user);
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-        
-        // Показываем основное приложение
-        showApp(user);
-    });
-    
-    function showApp(user) {
-        authContainer.classList.add('hidden');
-        appContainer.classList.remove('hidden');
-        usernameSpan.textContent = user.username;
-        
-        // Инициализируем чаты
-        initChats();
-    }
-    
-    function generateId() {
-        return Math.random().toString(36).substr(2, 9);
+        // Загружаем чаты и сообщения
+        loadUserChats(user.id);
     }
 });
+
+document.getElementById('login-btn').addEventListener('click', function() {
+    const phone = document.getElementById('phone').value;
+    const name = document.getElementById('username-input').value;
+    
+    if (phone && name) {
+        // Сохраняем пользователя
+        const user = {
+            id: generateUserId(),
+            phone: phone,
+            name: name
+        };
+        
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        
+        // Переходим в чат
+        document.getElementById('auth-container').classList.add('hidden');
+        document.getElementById('app-container').classList.remove('hidden');
+        document.getElementById('username').textContent = name;
+        
+        // Загружаем чаты
+        loadUserChats(user.id);
+    } else {
+        alert('Пожалуйста, заполните все поля');
+    }
+});
+
+function generateUserId() {
+    return 'user_' + Math.random().toString(36).substr(2, 9);
+}
+
+function loadUserChats(userId) {
+    // Загрузка чатов из localStorage
+    const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+    const userChats = chats.filter(chat => chat.participants.includes(userId));
+    
+    // Отображаем чаты
+    displayChats(userChats);
+}
