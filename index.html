@@ -8,16 +8,65 @@
     <link rel="stylesheet" href="styles/auth.css">
     <link rel="stylesheet" href="styles/chat.css">
     <link rel="stylesheet" href="styles/snow.css">
+    <link rel="stylesheet" href="styles/welcome.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div id="snow-container"></div>
     
-    <div id="auth-container" class="auth-container">
+    <!-- Приветственная страница -->
+    <div id="welcome-container" class="welcome-container">
+        <div class="welcome-content">
+            <div class="welcome-header">
+                <i class="fab fa-telegram fa-3x"></i>
+                <h1>Telegram Web</h1>
+                <p>Быстрые и безопасные сообщения</p>
+            </div>
+            
+            <div class="welcome-features">
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Мгновенная доставка</h3>
+                    <p>Сообщения доставляются быстрее, чем у конкурентов</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-lock"></i>
+                    <h3>Защищённость</h3>
+                    <p>Ваши переписки в безопасности</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-cloud"></i>
+                    <h3>Синхронизация</h3>
+                    <p>Доступ к чатам с любого устройства</p>
+                </div>
+            </div>
+            
+            <div class="privacy-policy">
+                <h3>Политика конфиденциальности</h3>
+                <div class="policy-content">
+                    <p>Мы собираем только необходимую информацию для работы сервиса. Ваши сообщения шифруются и не передаются третьим лицам. Продолжая использование сервиса, вы соглашаетесь с нашей политикой конфиденциальности.</p>
+                </div>
+                <label class="policy-checkbox">
+                    <input type="checkbox" id="policy-agree">
+                    <span>Я согласен с политикой конфиденциальности</span>
+                </label>
+            </div>
+            
+            <button id="start-btn" class="start-btn" disabled>Начать общение</button>
+        </div>
+    </div>
+    
+    <div id="auth-container" class="auth-container hidden">
         <div class="auth-form">
-            <h2>Добро пожаловать в Telegram</h2>
+            <div class="auth-header">
+                <i class="fab fa-telegram fa-2x"></i>
+                <h2>Добро пожаловать в Telegram</h2>
+            </div>
             <input type="text" id="phone" placeholder="Номер телефона">
+            <input type="text" id="username-input" placeholder="Ваше имя">
             <button id="login-btn">Войти</button>
-            <p class="auth-hint">Введите номер телефона для входа в аккаунт</p>
+            <p class="auth-hint">Введите номер телефона и имя для входа в аккаунт</p>
         </div>
     </div>
 
@@ -28,10 +77,12 @@
                     <img src="assets/icons/user-default.png" alt="User" class="user-avatar">
                     <span id="username">User</span>
                 </div>
-                <button class="new-chat-btn">+</button>
+                <button class="new-chat-btn" id="new-chat-btn"><i class="fas fa-edit"></i></button>
+                <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i></button>
             </div>
             <div class="search-container">
                 <input type="text" placeholder="Поиск" class="search-input">
+                <i class="fas fa-search"></i>
             </div>
             <div class="chats-list" id="chats-list">
                 <!-- Чаты будут загружаться здесь -->
@@ -48,30 +99,34 @@
                     </div>
                 </div>
                 <div class="chat-actions">
-                    <button class="action-btn">⋮</button>
+                    <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
                 </div>
             </div>
             
             <div class="messages-container" id="messages-container">
                 <!-- Сообщения будут загружаться здесь -->
                 <div class="empty-chat">
+                    <i class="fab fa-telegram fa-3x"></i>
                     <p>Выберите чат чтобы начать общение</p>
                 </div>
             </div>
             
             <div class="message-input-container hidden">
                 <div class="input-actions">
-                    <button class="attach-btn">📎</button>
+                    <button class="attach-btn"><i class="fas fa-paperclip"></i></button>
                 </div>
                 <input type="text" placeholder="Введите сообщение..." id="message-input">
-                <button id="send-btn">➤</button>
+                <button id="send-btn"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
         
-        <div class="contacts-panel hidden">
+        <div class="contacts-panel hidden" id="contacts-panel">
             <div class="contacts-header">
-                <h3>Контакты</h3>
-                <button class="close-contacts">×</button>
+                <h3>Новый чат</h3>
+                <button class="close-contacts" id="close-contacts">×</button>
+            </div>
+            <div class="contacts-search">
+                <input type="text" placeholder="Поиск контактов" id="contact-search">
             </div>
             <div class="contacts-list" id="contacts-list">
                 <!-- Контакты будут загружаться здесь -->
@@ -84,5 +139,6 @@
     <script src="scripts/auth.js"></script>
     <script src="scripts/chat.js"></script>
     <script src="scripts/websocket.js"></script>
+    <script src="scripts/welcome.js"></script>
 </body>
 </html>
