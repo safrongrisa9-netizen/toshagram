@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Clone</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/auth.css">
+    <link rel="stylesheet" href="styles/chat.css">
+    <link rel="stylesheet" href="styles/snow.css">
+</head>
+<body>
+    <div id="snow-container"></div>
+    
+    <div id="auth-container" class="auth-container">
+        <div class="auth-form">
+            <h2>Добро пожаловать в Telegram</h2>
+            <input type="text" id="phone" placeholder="Номер телефона">
+            <button id="login-btn">Войти</button>
+            <p class="auth-hint">Введите номер телефона для входа в аккаунт</p>
+        </div>
+    </div>
+
+    <div id="app-container" class="app-container hidden">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="user-info">
+                    <img src="assets/icons/user-default.png" alt="User" class="user-avatar">
+                    <span id="username">User</span>
+                </div>
+                <button class="new-chat-btn">+</button>
+            </div>
+            <div class="search-container">
+                <input type="text" placeholder="Поиск" class="search-input">
+            </div>
+            <div class="chats-list" id="chats-list">
+                <!-- Чаты будут загружаться здесь -->
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-header">
+                <div class="chat-partner-info">
+                    <img src="assets/icons/user-default.png" alt="Contact" class="chat-avatar">
+                    <div class="chat-info">
+                        <span class="chat-name" id="current-chat-name">Выберите чат</span>
+                        <span class="chat-status" id="current-chat-status">онлайн</span>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="action-btn">⋮</button>
+                </div>
+            </div>
+            
+            <div class="messages-container" id="messages-container">
+                <!-- Сообщения будут загружаться здесь -->
+                <div class="empty-chat">
+                    <p>Выберите чат чтобы начать общение</p>
+                </div>
+            </div>
+            
+            <div class="message-input-container hidden">
+                <div class="input-actions">
+                    <button class="attach-btn">📎</button>
+                </div>
+                <input type="text" placeholder="Введите сообщение..." id="message-input">
+                <button id="send-btn">➤</button>
+            </div>
+        </div>
+        
+        <div class="contacts-panel hidden">
+            <div class="contacts-header">
+                <h3>Контакты</h3>
+                <button class="close-contacts">×</button>
+            </div>
+            <div class="contacts-list" id="contacts-list">
+                <!-- Контакты будут загружаться здесь -->
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts/snow.js"></script>
+    <script src="scripts/utils.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/chat.js"></script>
+    <script src="scripts/websocket.js"></script>
+</body>
+</html>
