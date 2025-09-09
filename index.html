@@ -3,421 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Яндекс.Музыка</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Yandex+Sans:wght@300;400;500;700&display=swap">
+    <title>Онлайн-кликер</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Yandex Sans', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background-color: #121212;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
             color: #fff;
-            display: flex;
             min-height: 100vh;
-        }
-        
-        .sidebar {
-            width: 240px;
-            background-color: #000;
-            padding: 24px 0;
-            flex-shrink: 0;
-        }
-        
-        .logo {
-            padding: 0 24px 24px;
-            font-size: 24px;
-            font-weight: 700;
-            color: #fff;
-            border-bottom: 1px solid #282828;
-            margin-bottom: 24px;
-        }
-        
-        .menu-item {
-            padding: 12px 24px;
-            display: flex;
-            align-items: center;
-            color: #b3b3b3;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        
-        .menu-item:hover, .menu-item.active {
-            color: #fff;
-        }
-        
-        .menu-item i {
-            margin-right: 16px;
-            font-size: 20px;
-        }
-        
-        .main-container {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-        
-        .topbar {
-            height: 64px;
-            background: linear-gradient(to right, #222, #333);
-            display: flex;
-            align-items: center;
-            padding: 0 24px;
-            justify-content: space-between;
-        }
-        
-        .search-bar {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 8px 16px;
-            width: 300px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .search-bar input {
-            background: transparent;
-            border: none;
-            color: #fff;
-            margin-left: 8px;
-            width: 100%;
-            outline: none;
-        }
-        
-        .user-menu {
-            display: flex;
-            align-items: center;
-        }
-        
-        .user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: #535353;
-            margin-left: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .content {
-            flex-grow: 1;
-            padding: 24px;
-            overflow-y: auto;
-        }
-        
-        .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-        
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-        
-        .card {
-            background: #181818;
-            border-radius: 8px;
-            padding: 16px;
-            transition: background 0.3s;
-            cursor: pointer;
-        }
-        
-        .card:hover {
-            background: #282828;
-        }
-        
-        .card-img {
-            width: 100%;
-            aspect-ratio: 1/1;
-            border-radius: 4px;
-            margin-bottom: 16px;
-            object-fit: cover;
-            background-color: #333;
-        }
-        
-        .card-title {
-            font-weight: 700;
-            margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .card-desc {
-            color: #b3b3b3;
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .player {
-            height: 90px;
-            background: #181818;
-            border-top: 1px solid #282828;
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-        }
-        
-        .now-playing {
-            display: flex;
-            align-items: center;
-            width: 30%;
-        }
-        
-        .now-playing-img {
-            width: 56px;
-            height: 56px;
-            border-radius: 4px;
-            margin-right: 14px;
-            object-fit: cover;
-            background-color: #333;
-        }
-        
-        .now-playing-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .now-playing-name {
-            font-weight: 500;
-            font-size: 14px;
-        }
-        
-        .now-playing-artist {
-            font-size: 12px;
-            color: #b3b3b3;
-        }
-        
-        .player-controls {
-            width: 40%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .control-buttons {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-        
-        .control-button {
-            background: transparent;
-            border: none;
-            color: #b3b3b3;
-            font-size: 16px;
-            margin: 0 8px;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .control-button.play-pause {
-            background: #fff;
-            color: #000;
-            border-radius: 50%;
-        }
-        
-        .control-button:hover {
-            color: #fff;
-        }
-        
-        .progress-bar {
-            width: 100%;
-            display: flex;
-            align-items: center;
-        }
-        
-        .progress-time {
-            font-size: 12px;
-            color: #b3b3b3;
-            width: 40px;
-        }
-        
-        .progress-line {
-            flex-grow: 1;
-            height: 4px;
-            background: #535353;
-            border-radius: 2px;
-            margin: 0 8px;
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .progress-filled {
-            height: 100%;
-            background: #b3b3b3;
-            border-radius: 2px;
-            width: 30%;
-        }
-        
-        .progress-line:hover .progress-filled {
-            background: #1db954;
-        }
-        
-        .volume-controls {
-            width: 30%;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-        
-        .volume-button, .like-button {
-            background: transparent;
-            border: none;
-            color: #b3b3b3;
-            font-size: 16px;
-            margin: 0 8px;
-            cursor: pointer;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .volume-button:hover, .like-button:hover {
-            color: #fff;
-        }
-        
-        .volume-slider {
-            width: 100px;
-            height: 4px;
-            background: #535353;
-            border-radius: 2px;
-            position: relative;
-            cursor: pointer;
-        }
-        
-        .volume-filled {
-            height: 100%;
-            background: #b3b3b3;
-            border-radius: 2px;
-            width: 70%;
-        }
-        
-        .upload-section {
-            background: #282828;
             padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-        }
-        
-        .upload-title {
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-        
-        .upload-form {
             display: flex;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
             gap: 15px;
         }
-        
-        .form-group {
-            flex: 1;
-            min-width: 200px;
+
+        .coins {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
         }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            color: #b3b3b3;
+
+        .coins i {
+            color: gold;
         }
-        
-        .form-group input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #535353;
-            background: #121212;
-            color: #fff;
-        }
-        
-        .upload-button {
-            background: #1db954;
-            color: #fff;
+
+        .btn {
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
             border: none;
             padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
             cursor: pointer;
-            font-weight: 500;
-            align-self: flex-end;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        
-        .upload-button:hover {
-            background: #1ed760;
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
-        
-        .like-button.liked {
-            color: #1db954;
-        }
-        
-        .top-charts {
-            margin-top: 40px;
-        }
-        
-        .chart-list {
-            list-style: none;
-        }
-        
-        .chart-item {
+
+        .main-content {
             display: flex;
+            width: 100%;
+            gap: 20px;
+        }
+
+        .left-panel, .right-panel {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .center-panel {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 8px;
-            background: rgba(255, 255, 255, 0.05);
+            gap: 20px;
         }
-        
-        .chart-item:hover {
-            background: rgba(255, 255, 255, 0.1);
+
+        .clicker {
+            background: linear-gradient(135deg, #8E2DE2, #4A00E0);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            transition: transform 0.1s;
+            user-select: none;
         }
-        
-        .chart-number {
-            font-size: 16px;
-            font-weight: 700;
-            width: 30px;
+
+        .clicker:active {
+            transform: scale(0.95);
+        }
+
+        .clicker i {
+            font-size: 100px;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+        }
+
+        .stat {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 10px;
             text-align: center;
         }
-        
-        .chart-info {
-            flex-grow: 1;
-            margin-left: 16px;
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffcc00;
         }
-        
-        .chart-title {
-            font-weight: 500;
+
+        .upgrades {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
         }
-        
-        .chart-artist {
-            font-size: 14px;
-            color: #b3b3b3;
-        }
-        
-        .chart-likes {
+
+        .upgrade {
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 15px;
+            border-radius: 10px;
             display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .upgrade-header {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            color: #b3b3b3;
+        }
+
+        .upgrade-name {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .upgrade-level {
+            background-color: #ffcc00;
+            color: #000;
+            padding: 3px 10px;
+            border-radius: 15px;
             font-size: 14px;
         }
-        
+
+        .upgrade-description {
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        .upgrade-cost {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .leaderboard {
+            margin-top: 20px;
+        }
+
+        .leaderboard-title {
+            font-size: 22px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #ffcc00;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        .leaderboard-position {
+            font-weight: bold;
+            color: #ffcc00;
+        }
+
+        .leaderboard-name {
+            flex-grow: 1;
+            margin-left: 15px;
+        }
+
+        .leaderboard-score {
+            font-weight: bold;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -425,504 +240,568 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
-            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
             justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
-        
+
         .modal-content {
-            background: #282828;
-            padding: 20px;
-            border-radius: 8px;
-            width: 400px;
-            max-width: 90%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
         }
-        
+
         .modal-title {
-            font-size: 20px;
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffcc00;
+        }
+
+        .form-group {
             margin-bottom: 20px;
         }
-        
-        .login-form input {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            border: 1px solid #535353;
-            background: #121212;
-            color: #fff;
-        }
-        
-        .login-button {
-            background: #1db954;
-            color: #fff;
-            border: none;
-            padding: 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 500;
-        }
-        
-        .login-button:hover {
-            background: #1ed760;
-        }
-        
-        .close-modal {
-            color: #b3b3b3;
-            float: right;
-            font-size: 24px;
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: bold;
-            cursor: pointer;
         }
-        
-        .close-modal:hover {
-            color: #fff;
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .click-animation {
+            position: absolute;
+            pointer-events: none;
+            font-size: 24px;
+            color: gold;
+            animation: floatUp 1s forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .upgrades {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Боковая панель -->
-    <div class="sidebar">
-        <div class="logo">Яндекс.Музыка</div>
-        <a href="#" class="menu-item active">
-            <i>🎵</i> Главная
-        </a>
-        <a href="#" class="menu-item">
-            <i>🔍</i> Поиск
-        </a>
-        <a href="#" class="menu-item">
-            <i>📻</i> Медиатека
-        </a>
-        <a href="#" class="menu-item">
-            <i>❤️</i> Избранное
-        </a>
-        <a href="#" class="menu-item">
-            <i>📊</i> Топ-чарты
-        </a>
-    </div>
-
-    <!-- Основной контент -->
-    <div class="main-container">
-        <!-- Верхняя панель -->
-        <div class="topbar">
-            <div class="search-bar">
-                <i>🔍</i>
-                <input type="text" placeholder="Поиск музыки" id="searchInput">
+    <div class="container">
+        <header>
+            <div class="logo">CLICKER MASTER</div>
+            <div class="user-info">
+                <div class="coins">
+                    <i class="fas fa-coins"></i>
+                    <span id="coins-count">0</span>
+                </div>
+                <button id="logout-btn" class="btn">Выйти</button>
             </div>
-            <div class="user-menu">
-                <span id="userName">Гость</span>
-                <div class="user-avatar" id="userAvatar">👤</div>
-            </div>
-        </div>
+        </header>
 
-        <!-- Контент -->
-        <div class="content">
-            <h2 class="section-title">Новая музыка</h2>
-            <div class="cards-grid" id="musicGrid">
-                <!-- Карточки музыки будут добавляться здесь -->
-            </div>
-
-            <div class="upload-section">
-                <h3 class="upload-title">Загрузить свою музыку</h3>
-                <div class="upload-form">
-                    <div class="form-group">
-                        <label for="musicTitle">Название трека</label>
-                        <input type="text" id="musicTitle" placeholder="Введите название">
+        <div class="main-content">
+            <div class="left-panel">
+                <h2>Магазин улучшений</h2>
+                <div class="upgrades">
+                    <div class="upgrade">
+                        <div class="upgrade-header">
+                            <div class="upgrade-name">Автокликер</div>
+                            <div class="upgrade-level">Ур. <span id="autoclicker-level">0</span></div>
+                        </div>
+                        <div class="upgrade-description">Автоматически кликает каждые 10 секунд</div>
+                        <div class="upgrade-cost">
+                            <span><i class="fas fa-coins"></i> <span id="autoclicker-cost">50</span></span>
+                            <button class="btn buy-btn" data-upgrade="autoclicker">Купить</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="artistName">Исполнитель</label>
-                        <input type="text" id="artistName" placeholder="Введите имя исполнителя">
+                    
+                    <div class="upgrade">
+                        <div class="upgrade-header">
+                            <div class="upgrade-name">Усилитель клика</div>
+                            <div class="upgrade-level">Ур. <span id="clickpower-level">0</span></div>
+                        </div>
+                        <div class="upgrade-description">Увеличивает количество монет за клик</div>
+                        <div class="upgrade-cost">
+                            <span><i class="fas fa-coins"></i> <span id="clickpower-cost">100</span></span>
+                            <button class="btn buy-btn" data-upgrade="clickpower">Купить</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="musicFile">Файл музыки (MP3)</label>
-                        <input type="file" id="musicFile" accept="audio/mp3">
+                    
+                    <div class="upgrade">
+                        <div class="upgrade-header">
+                            <div class="upgrade-name">Удача</div>
+                            <div class="upgrade-level">Ур. <span id="luck-level">0</span></div>
+                        </div>
+                        <div class="upgrade-description">Шанс получить х2 монеты за клик</div>
+                        <div class="upgrade-cost">
+                            <span><i class="fas fa-coins"></i> <span id="luck-cost">200</span></span>
+                            <button class="btn buy-btn" data-upgrade="luck">Купить</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="coverFile">Обложка (необязательно)</label>
-                        <input type="file" id="coverFile" accept="image/*">
+                    
+                    <div class="upgrade">
+                        <div class="upgrade-header">
+                            <div class="upgrade-name">Критический удар</div>
+                            <div class="upgrade-level">Ур. <span id="critical-level">0</span></div>
+                        </div>
+                        <div class="upgrade-description">Шанс нанести критический удар (x5)</div>
+                        <div class="upgrade-cost">
+                            <span><i class="fas fa-coins"></i> <span id="critical-cost">300</span></span>
+                            <button class="btn buy-btn" data-upgrade="critical">Купить</button>
+                        </div>
                     </div>
-                    <button class="upload-button" id="uploadButton">Загрузить</button>
                 </div>
             </div>
-
-            <div class="top-charts">
-                <h2 class="section-title">Топ-10 песен</h2>
-                <ul class="chart-list" id="topCharts">
-                    <!-- Топ-чарты будут добавляться здесь -->
-                </ul>
-            </div>
-        </div>
-
-        <!-- Аудиоплеер -->
-        <div class="player">
-            <div class="now-playing">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSIjMzMzIj48cGF0aCBkPSJNNTAgMTVjMTkuMyAwIDM1IDE1LjcgMzUgMzVzLTE1LjcgMzUtMzUgMzUtMzUtMTUuNy0zNS0zNSAxNS43LTM1IDM1LTM1em0wIDVjMTYuNSAwIDMwIDEzLjUgMzAgMzBzLTEzLjUgMzAtMzAgMzAtMzAtMTMuNS0zMC0zMCAxMy41LTMwIDMwLTMwem0wIDE4YzYuNiAwIDEyIDUuNCAxMiAxMnMtNS40IDEyLTEyIDEyLTEyLTUuNC0xMi0xMiA1LjQtMTIgMTItMTJ6Ii8+PC9zdmc+" class="now-playing-img" id="nowPlayingImg">
-                <div class="now-playing-info">
-                    <div class="now-playing-name" id="nowPlayingName">Выберите трек</div>
-                    <div class="now-playing-artist" id="nowPlayingArtist">—</div>
+            
+            <div class="center-panel">
+                <div class="clicker" id="clicker">
+                    <i class="fas fa-hand-pointer"></i>
                 </div>
-            </div>
-            <div class="player-controls">
-                <div class="control-buttons">
-                    <button class="control-button">🔀</button>
-                    <button class="control-button">⏮</button>
-                    <button class="control-button play-pause" id="playPauseButton">▶</button>
-                    <button class="control-button">⏭</button>
-                    <button class="control-button">🔁</button>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-time" id="currentTime">0:00</div>
-                    <div class="progress-line">
-                        <div class="progress-filled" id="progressFilled"></div>
+                <div class="stats">
+                    <div class="stat">
+                        <div>Монет за клик</div>
+                        <div class="stat-value" id="coins-per-click">1</div>
                     </div>
-                    <div class="progress-time" id="durationTime">0:00</div>
+                    <div class="stat">
+                        <div>Всего кликов</div>
+                        <div class="stat-value" id="total-clicks">0</div>
+                    </div>
                 </div>
             </div>
-            <div class="volume-controls">
-                <button class="like-button" id="likeButton">❤</button>
-                <button class="volume-button">🔊</button>
-                <div class="volume-slider">
-                    <div class="volume-filled"></div>
+            
+            <div class="right-panel">
+                <h2>Таблица лидеров</h2>
+                <div class="leaderboard">
+                    <div class="leaderboard-title">Топ-10 игроков</div>
+                    <ul class="leaderboard-list" id="leaderboard">
+                        <!-- Leaderboard will be populated by JavaScript -->
+                    </ul>
                 </div>
             </div>
-            <audio id="audioPlayer" style="display: none;"></audio>
         </div>
     </div>
 
-    <!-- Модальное окно входа -->
-    <div class="modal" id="loginModal">
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
         <div class="modal-content">
-            <span class="close-modal" id="closeModal">&times;</span>
-            <h2 class="modal-title">Вход в аккаунт</h2>
-            <div class="login-form">
-                <input type="text" placeholder="Имя пользователя" id="usernameInput">
-                <button class="login-button" id="loginButton">Войти</button>
+            <h2 class="modal-title">Вход</h2>
+            <div class="form-group">
+                <label for="login-username">Имя пользователя</label>
+                <input type="text" id="login-username" placeholder="Введите имя пользователя">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Пароль</label>
+                <input type="password" id="login-password" placeholder="Введите пароль">
+            </div>
+            <div class="form-actions">
+                <button class="btn" id="login-btn">Войти</button>
+                <button class="btn" id="show-register">Регистрация</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <h2 class="modal-title">Регистрация</h2>
+            <div class="form-group">
+                <label for="register-username">Имя пользователя</label>
+                <input type="text" id="register-username" placeholder="Придумайте имя пользователя">
+            </div>
+            <div class="form-group">
+                <label for="register-password">Пароль</label>
+                <input type="password" id="register-password" placeholder="Придумайте пароль">
+            </div>
+            <div class="form-actions">
+                <button class="btn" id="register-btn">Зарегистрироваться</button>
+                <button class="btn" id="show-login">Назад к входу</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Инициализация состояния приложения
-        let currentUser = localStorage.getItem('currentUser') || 'Гость';
-        let musicLibrary = JSON.parse(localStorage.getItem('musicLibrary')) || [];
-        let currentTrackIndex = -1;
-        let isPlaying = false;
+        // Основные переменные
+        let currentUser = null;
+        let users = JSON.parse(localStorage.getItem('clickerUsers')) || {};
+        let coins = 0;
+        let totalClicks = 0;
+        let coinsPerClick = 1;
+        let upgrades = {
+            autoclicker: { level: 0, cost: 50 },
+            clickpower: { level: 0, cost: 100 },
+            luck: { level: 0, cost: 200 },
+            critical: { level: 0, cost: 300 }
+        };
+        let autoClickInterval = null;
+
+        // DOM элементы
+        const clicker = document.getElementById('clicker');
+        const coinsCountElement = document.getElementById('coins-count');
+        const coinsPerClickElement = document.getElementById('coins-per-click');
+        const totalClicksElement = document.getElementById('total-clicks');
+        const leaderboardElement = document.getElementById('leaderboard');
         
-        // Элементы DOM
-        const audioPlayer = document.getElementById('audioPlayer');
-        const playPauseButton = document.getElementById('playPauseButton');
-        const progressFilled = document.getElementById('progressFilled');
-        const currentTimeElement = document.getElementById('currentTime');
-        const durationTimeElement = document.getElementById('durationTime');
-        const nowPlayingName = document.getElementById('nowPlayingName');
-        const nowPlayingArtist = document.getElementById('nowPlayingArtist');
-        const nowPlayingImg = document.getElementById('nowPlayingImg');
-        const likeButton = document.getElementById('likeButton');
-        const musicGrid = document.getElementById('musicGrid');
-        const topCharts = document.getElementById('topCharts');
-        const userName = document.getElementById('userName');
-        const userAvatar = document.getElementById('userAvatar');
-        const loginModal = document.getElementById('loginModal');
-        const closeModal = document.getElementById('closeModal');
-        const loginButton = document.getElementById('loginButton');
-        const usernameInput = document.getElementById('usernameInput');
-        const uploadButton = document.getElementById('uploadButton');
-        const searchInput = document.getElementById('searchInput');
-        
-        // Инициализация пользователя
-        userName.textContent = currentUser;
-        
-        // Показать модальное окно входа, если пользователь - Гость
-        if (currentUser === 'Гость') {
+        // Модальные окна
+        const loginModal = document.getElementById('login-modal');
+        const registerModal = document.getElementById('register-modal');
+
+        // Инициализация
+        function init() {
+            loadLeaderboard();
+            checkAuth();
+            
+            // Обработчики событий
+            clicker.addEventListener('click', handleClick);
+            document.querySelectorAll('.buy-btn').forEach(btn => {
+                btn.addEventListener('click', handleBuyUpgrade);
+            });
+            
+            document.getElementById('logout-btn').addEventListener('click', handleLogout);
+            document.getElementById('login-btn').addEventListener('click', handleLogin);
+            document.getElementById('register-btn').addEventListener('click', handleRegister);
+            document.getElementById('show-register').addEventListener('click', showRegister);
+            document.getElementById('show-login').addEventListener('click', showLogin);
+        }
+
+        // Проверка авторизации
+        function checkAuth() {
+            const savedUser = localStorage.getItem('currentUser');
+            if (savedUser && users[savedUser]) {
+                currentUser = savedUser;
+                loadUserData();
+                updateUI();
+            } else {
+                showLogin();
+            }
+        }
+
+        // Загрузка данных пользователя
+        function loadUserData() {
+            if (users[currentUser]) {
+                coins = users[currentUser].coins || 0;
+                totalClicks = users[currentUser].totalClicks || 0;
+                coinsPerClick = users[currentUser].coinsPerClick || 1;
+                upgrades = users[currentUser].upgrades || upgrades;
+                
+                // Запуск автокликера, если есть
+                if (upgrades.autoclicker.level > 0) {
+                    startAutoClicker();
+                }
+            }
+        }
+
+        // Сохранение данных пользователя
+        function saveUserData() {
+            if (currentUser) {
+                users[currentUser] = {
+                    coins,
+                    totalClicks,
+                    coinsPerClick,
+                    upgrades
+                };
+                localStorage.setItem('clickerUsers', JSON.stringify(users));
+                updateLeaderboard();
+            }
+        }
+
+        // Обработка клика
+        function handleClick(e) {
+            // Определяем, был ли критический удар
+            let criticalHit = false;
+            if (upgrades.critical.level > 0 && Math.random() < upgrades.critical.level * 0.05) {
+                criticalHit = true;
+            }
+            
+            // Определяем, был ли удачный клик
+            let luckyClick = false;
+            if (upgrades.luck.level > 0 && Math.random() < upgrades.luck.level * 0.03) {
+                luckyClick = true;
+            }
+            
+            // Вычисляем количество монет за клик
+            let clickValue = coinsPerClick;
+            if (criticalHit) clickValue *= 5;
+            if (luckyClick) clickValue *= 2;
+            
+            // Добавляем монеты
+            coins += clickValue;
+            totalClicks++;
+            
+            // Создаем анимацию клика
+            createClickAnimation(e, clickValue, criticalHit, luckyClick);
+            
+            // Обновляем UI и сохраняем данные
+            updateUI();
+            saveUserData();
+        }
+
+        // Создание анимации клика
+        function createClickAnimation(e, value, isCritical, isLucky) {
+            const anim = document.createElement('div');
+            anim.className = 'click-animation';
+            anim.textContent = `+${value}`;
+            
+            if (isCritical) {
+                anim.style.color = '#ff0000';
+                anim.style.fontSize = '28px';
+                anim.style.fontWeight = 'bold';
+            } else if (isLucky) {
+                anim.style.color = '#00ff00';
+            }
+            
+            document.body.appendChild(anim);
+            
+            // Позиционируем анимацию
+            const rect = clicker.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            anim.style.left = `${rect.left + x}px`;
+            anim.style.top = `${rect.top + y}px`;
+            
+            // Удаляем анимацию после завершения
             setTimeout(() => {
-                loginModal.style.display = 'flex';
+                anim.remove();
             }, 1000);
         }
-        
-        // Закрытие модального окна
-        closeModal.addEventListener('click', () => {
-            loginModal.style.display = 'none';
-        });
-        
-        // Обработка входа
-        loginButton.addEventListener('click', () => {
-            const username = usernameInput.value.trim();
-            if (username) {
+
+        // Покупка улучшения
+        function handleBuyUpgrade(e) {
+            const upgradeType = e.target.dataset.upgrade;
+            const upgrade = upgrades[upgradeType];
+            
+            if (coins >= upgrade.cost) {
+                coins -= upgrade.cost;
+                upgrade.level++;
+                upgrade.cost = Math.floor(upgrade.cost * 1.5);
+                
+                // Применяем эффекты улучшений
+                applyUpgradeEffects(upgradeType);
+                
+                // Обновляем UI и сохраняем данные
+                updateUI();
+                saveUserData();
+                
+                // Если купили автокликер, запускаем его
+                if (upgradeType === 'autoclicker' && upgrade.level === 1) {
+                    startAutoClicker();
+                }
+            } else {
+                alert('Недостаточно монет!');
+            }
+        }
+
+        // Применение эффектов улучшений
+        function applyUpgradeEffects(type) {
+            switch(type) {
+                case 'clickpower':
+                    coinsPerClick = 1 + upgrades.clickpower.level;
+                    break;
+                case 'autoclicker':
+                    // Уже обрабатывается при покупке
+                    break;
+                // Для luck и critical не нужно обновлять значения в реальном времени
+            }
+        }
+
+        // Запуск автокликера
+        function startAutoClicker() {
+            if (autoClickInterval) {
+                clearInterval(autoClickInterval);
+            }
+            
+            const interval = 10000 / (1 + upgrades.autoclicker.level * 0.5);
+            autoClickInterval = setInterval(() => {
+                coins += coinsPerClick * (0.5 + upgrades.autoclicker.level * 0.1);
+                totalClicks++;
+                updateUI();
+                saveUserData();
+            }, interval);
+        }
+
+        // Обновление интерфейса
+        function updateUI() {
+            coinsCountElement.textContent = coins;
+            coinsPerClickElement.textContent = coinsPerClick;
+            totalClicksElement.textContent = totalClicks;
+            
+            // Обновляем информацию об улучшениях
+            for (const [key, upgrade] of Object.entries(upgrades)) {
+                document.getElementById(`${key}-level`).textContent = upgrade.level;
+                document.getElementById(`${key}-cost`).textContent = upgrade.cost;
+            }
+        }
+
+        // Загрузка таблицы лидеров
+        function loadLeaderboard() {
+            const leaderboard = getLeaderboard();
+            leaderboardElement.innerHTML = '';
+            
+            leaderboard.forEach((user, index) => {
+                const li = document.createElement('li');
+                li.className = 'leaderboard-item';
+                
+                li.innerHTML = `
+                    <span class="leaderboard-position">${index + 1}</span>
+                    <span class="leaderboard-name">${user.username}</span>
+                    <span class="leaderboard-score">${user.coins} <i class="fas fa-coins"></i></span>
+                `;
+                
+                if (user.username === currentUser) {
+                    li.style.backgroundColor = 'rgba(255, 204, 0, 0.2)';
+                }
+                
+                leaderboardElement.appendChild(li);
+            });
+        }
+
+        // Получение таблицы лидеров
+        function getLeaderboard() {
+            const leaderboard = [];
+            
+            for (const [username, data] of Object.entries(users)) {
+                leaderboard.push({
+                    username,
+                    coins: data.coins || 0
+                });
+            }
+            
+            return leaderboard.sort((a, b) => b.coins - a.coins).slice(0, 10);
+        }
+
+        // Обновление таблицы лидеров
+        function updateLeaderboard() {
+            loadLeaderboard();
+        }
+
+        // Вход
+        function handleLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!username || !password) {
+                alert('Заполните все поля!');
+                return;
+            }
+            
+            if (users[username] && users[username].password === password) {
                 currentUser = username;
-                userName.textContent = currentUser;
-                localStorage.setItem('currentUser', currentUser);
-                loginModal.style.display = 'none';
+                localStorage.setItem('currentUser', username);
+                loadUserData();
+                updateUI();
+                hideModals();
+            } else {
+                alert('Неверное имя пользователя или пароль!');
             }
-        });
-        
-        // Загрузка музыки
-        uploadButton.addEventListener('click', () => {
-            if (currentUser === 'Гость') {
-                alert('Пожалуйста, войдите в систему для загрузки музыки');
-                loginModal.style.display = 'flex';
+        }
+
+        // Регистрация
+        function handleRegister() {
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            
+            if (!username || !password) {
+                alert('Заполните все поля!');
                 return;
             }
             
-            const title = document.getElementById('musicTitle').value;
-            const artist = document.getElementById('artistName').value;
-            const musicFile = document.getElementById('musicFile').files[0];
-            const coverFile = document.getElementById('coverFile').files[0];
-            
-            if (!title || !artist || !musicFile) {
-                alert('Пожалуйста, заполните все обязательные поля');
+            if (users[username]) {
+                alert('Пользователь с таким именем уже существует!');
                 return;
             }
             
-            // Создание объекта для трека
-            const track = {
-                id: Date.now(),
-                title,
-                artist,
-                uploader: currentUser,
-                likes: 0,
-                likedBy: [],
-                plays: 0,
-                src: URL.createObjectURL(musicFile),
-                cover: coverFile ? URL.createObjectURL(coverFile) : 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSIjMzMzIj48cGF0aCBkPSJNNTAgMTVjMTkuMyAwIDM1IDE1LjcgMzUgMzVzLTE1LjcgMzUtMzUgMzUtMzUtMTUuNy0zNS0zNSAxNS43LTM1IDM1LTM1em0wIDVjMTYuNSAwIDMwIDEzLjUgMzAgMzBzLTEzLjUgMzAtMzAgMzAtMzAtMTMuNS0zMC0zMCAxMy41LTMwIDMwLTMwem0wIDE4YzYuNiAwIDEyIDUuNCAxMiAxMnMtNS40IDEyLTEyIDEyLTEyLTUuNC0xMi0xMiA1LjQtMTIgMTItMTJ6Ii8+PC9zdmc+'
+            users[username] = {
+                password,
+                coins: 0,
+                totalClicks: 0,
+                coinsPerClick: 1,
+                upgrades: {
+                    autoclicker: { level: 0, cost: 50 },
+                    clickpower: { level: 0, cost: 100 },
+                    luck: { level: 0, cost: 200 },
+                    critical: { level: 0, cost: 300 }
+                }
             };
             
-            // Добавление трека в библиотеку
-            musicLibrary.push(track);
-            localStorage.setItem('musicLibrary', JSON.stringify(musicLibrary));
+            localStorage.setItem('clickerUsers', JSON.stringify(users));
             
-            // Обновление интерфейса
-            renderMusicGrid();
-            renderTopCharts();
+            currentUser = username;
+            localStorage.setItem('currentUser', username);
+            loadUserData();
+            updateUI();
+            hideModals();
             
-            // Очистка формы
-            document.getElementById('musicTitle').value = '';
-            document.getElementById('artistName').value = '';
-            document.getElementById('musicFile').value = '';
-            document.getElementById('coverFile').value = '';
-            
-            alert('Трек успешно загружен!');
-        });
-        
-        // Воспроизведение музыки
-        function playTrack(index) {
-            if (index < 0 || index >= musicLibrary.length) return;
-            
-            const track = musicLibrary[index];
-            currentTrackIndex = index;
-            
-            audioPlayer.src = track.src;
-            audioPlayer.play();
-            isPlaying = true;
-            playPauseButton.textContent = '⏸';
-            
-            nowPlayingName.textContent = track.title;
-            nowPlayingArtist.textContent = track.artist;
-            nowPlayingImg.src = track.cover;
-            
-            // Обновляем счетчик прослушиваний
-            track.plays = (track.plays || 0) + 1;
-            localStorage.setItem('musicLibrary', JSON.stringify(musicLibrary));
-            
-            // Обновляем состояние лайка
-            updateLikeButton();
+            alert('Регистрация прошла успешно!');
         }
-        
-        // Обновление кнопки лайка
-        function updateLikeButton() {
-            if (currentTrackIndex === -1) return;
+
+        // Выход
+        function handleLogout() {
+            saveUserData();
+            currentUser = null;
+            localStorage.removeItem('currentUser');
             
-            const track = musicLibrary[currentTrackIndex];
-            const isLiked = track.likedBy && track.likedBy.includes(currentUser);
-            
-            likeButton.classList.toggle('liked', isLiked);
-        }
-        
-        // Переключение воспроизведения
-        playPauseButton.addEventListener('click', () => {
-            if (currentTrackIndex === -1) {
-                if (musicLibrary.length > 0) {
-                    playTrack(0);
-                }
-                return;
+            if (autoClickInterval) {
+                clearInterval(autoClickInterval);
+                autoClickInterval = null;
             }
             
-            if (isPlaying) {
-                audioPlayer.pause();
-                playPauseButton.textContent = '▶';
-            } else {
-                audioPlayer.play();
-                playPauseButton.textContent = '⏸';
-            }
-            isPlaying = !isPlaying;
-        });
-        
-        // Обработка лайков
-        likeButton.addEventListener('click', () => {
-            if (currentTrackIndex === -1 || currentUser === 'Гость') return;
-            
-            const track = musicLibrary[currentTrackIndex];
-            
-            if (!track.likedBy) {
-                track.likedBy = [];
-            }
-            
-            const userIndex = track.likedBy.indexOf(currentUser);
-            
-            if (userIndex === -1) {
-                track.likedBy.push(currentUser);
-                track.likes = (track.likes || 0) + 1;
-                likeButton.classList.add('liked');
-            } else {
-                track.likedBy.splice(userIndex, 1);
-                track.likes = Math.max(0, (track.likes || 1) - 1);
-                likeButton.classList.remove('liked');
-            }
-            
-            localStorage.setItem('musicLibrary', JSON.stringify(musicLibrary));
-            renderTopCharts();
-        });
-        
-        // Обновление прогресса воспроизведения
-        audioPlayer.addEventListener('timeupdate', () => {
-            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-            progressFilled.style.width = `${percent}%`;
-            
-            // Обновление времени
-            currentTimeElement.textContent = formatTime(audioPlayer.currentTime);
-            durationTimeElement.textContent = formatTime(audioPlayer.duration);
-        });
-        
-        // Перемотка при клике на прогресс-бар
-        progressFilled.parentElement.addEventListener('click', (e) => {
-            const progressWidth = e.currentTarget.clientWidth;
-            const clickX = e.offsetX;
-            const duration = audioPlayer.duration;
-            
-            audioPlayer.currentTime = (clickX / progressWidth) * duration;
-        });
-        
-        // Форматирование времени
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return '0:00';
-            
-            const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+            showLogin();
         }
-        
-        // Отрисовка сетки с музыкой
-        function renderMusicGrid() {
-            musicGrid.innerHTML = '';
-            
-            const filteredMusic = filterMusicBySearch();
-            
-            filteredMusic.forEach((track, index) => {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <img src="${track.cover}" class="card-img">
-                    <div class="card-title">${track.title}</div>
-                    <div class="card-desc">${track.artist}</div>
-                `;
-                
-                card.addEventListener('click', () => {
-                    playTrack(musicLibrary.indexOf(track));
-                });
-                
-                musicGrid.appendChild(card);
-            });
+
+        // Показать модальное окно входа
+        function showLogin() {
+            loginModal.style.display = 'flex';
+            registerModal.style.display = 'none';
         }
-        
-        // Отрисовка топ-чартов
-        function renderTopCharts() {
-            topCharts.innerHTML = '';
-            
-            // Сортируем музыку по лайкам и прослушиваниям
-            const sortedMusic = [...musicLibrary]
-                .sort((a, b) => {
-                    const aScore = (a.likes || 0) * 2 + (a.plays || 0);
-                    const bScore = (b.likes || 0) * 2 + (b.plays || 0);
-                    return bScore - aScore;
-                })
-                .slice(0, 10);
-            
-            sortedMusic.forEach((track, index) => {
-                const li = document.createElement('li');
-                li.className = 'chart-item';
-                li.innerHTML = `
-                    <div class="chart-number">${index + 1}</div>
-                    <div class="chart-info">
-                        <div class="chart-title">${track.title}</div>
-                        <div class="chart-artist">${track.artist}</div>
-                    </div>
-                    <div class="chart-likes">
-                        <span>❤</span> ${track.likes || 0}
-                    </div>
-                `;
-                
-                li.addEventListener('click', () => {
-                    const trackIndex = musicLibrary.indexOf(track);
-                    playTrack(trackIndex);
-                });
-                
-                topCharts.appendChild(li);
-            });
+
+        // Показать модальное окно регистрации
+        function showRegister() {
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'flex';
         }
-        
-        // Поиск музыки
-        searchInput.addEventListener('input', () => {
-            renderMusicGrid();
-        });
-        
-        function filterMusicBySearch() {
-            const searchText = searchInput.value.toLowerCase();
-            
-            if (!searchText) {
-                return musicLibrary;
-            }
-            
-            return musicLibrary.filter(track => 
-                track.title.toLowerCase().includes(searchText) || 
-                track.artist.toLowerCase().includes(searchText)
-            );
+
+        // Скрыть все модальные окна
+        function hideModals() {
+            loginModal.style.display = 'none';
+            registerModal.style.display = 'none';
         }
+
+        // Запуск приложения
+        window.addEventListener('load', init);
         
-        // Инициализация при загрузке
-        window.addEventListener('load', () => {
-            renderMusicGrid();
-            renderTopCharts();
-            
-            // Добавляем демо-треки, если библиотека пуста
-            if (musicLibrary.length === 0) {
-                musicLibrary.push(
-                    {
-                        id: 1,
-                        title: "Пример трека 1",
-                        artist: "Неизвестный исполнитель",
-                        uploader: "Система",
-                        likes: 15,
-                        likedBy: [],
-                        plays: 42,
-                        src: "https://cdn.pixabay.com/download/audio/2022/01/18/audio_dc6f2e5c14.mp3?filename=electronic-rock-king-around-here-15045.mp3",
-                        cover: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSIjMzMzIj48cGF0aCBkPSJNNTAgMTVjMTkuMyAwIDM1IDE1LjcgMzUgMzVzLTE1LjcgMzUtMzUgMzUtMzUtMTUuNy0zNS0zNSAxNS43LTM1IDM1LTM1em0wIDVjMTYuNSAwIDMwIDEzLjUgMzAgMzBzLTEzLjUgMzAtMzAgMzAtMzAtMTMuNS0zMC0zMCAxMy41LTMwIDMwLTMwem0wIDE4YzYuNiAwIDEyIDUuNCAxMiAxMnMtNS40IDEyLTEyIDEyLTEyLTUuNC0xMi0xMiA1LjQtMTIgMTItMTJ6Ii8+PC9zdmc+"
-                    },
-                    {
-                        id: 2,
-                        title: "Пример трека 2",
-                        artist: "Популярный артист",
-                        uploader: "Система",
-                        likes: 28,
-                        likedBy: [],
-                        plays: 75,
-                        src: "https://cdn.pixabay.com/download/audio/2022/03/15/audio_5b8c0f6f13.mp3?filename=upbeat-inspiring-electronic-123571.mp3",
-                        cover: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSIjNTM1Ij48cmVjdCB4PSIzMCIgeT0iMjUiIHdpZHRoPSI0MCIgaGVpZ2h0PSI1MCIgcng9IjUiIHJ5PSI1IiBmaWxsPSIjMzMzIi8+PC9zdmc+"
-                    }
-                );
-                localStorage.setItem('musicLibrary', JSON.stringify(musicLibrary));
-                renderMusicGrid();
-                renderTopCharts();
+        // Сохранение данных при закрытии страницы
+        window.addEventListener('beforeunload', () => {
+            if (currentUser) {
+                saveUserData();
             }
         });
     </script>
