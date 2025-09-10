@@ -3,83 +3,633 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Epic Clicker - Нереальный Кликер</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>RealTime Messenger</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        :root {
+            --primary-color: #7289da;
+            --dark-bg: #36393f;
+            --light-bg: #40444b;
+            --text-color: #dcddde;
+            --success-color: #43b581;
+            --error-color: #f04747;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            height: 90vh;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .auth-container, .chat-container {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .auth-form {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            background-color: var(--dark-bg);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-form h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #202225;
+            border-radius: 4px;
+            background-color: #303339;
+            color: var(--text-color);
+        }
+        
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #5b6eae;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+        
+        .auth-switch a {
+            color: var(--primary-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .success-message {
+            color: var(--success-color);
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        /* Chat styles */
+        .chat-container {
+            display: none;
+            padding: 0;
+        }
+        
+        .chat-header {
+            width: 100%;
+            padding: 15px 20px;
+            background-color: var(--dark-bg);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            width: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: var(--dark-bg);
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background-color: var(--light-bg);
+            border-radius: 8px;
+            max-width: 70%;
+        }
+        
+        .my-message {
+            margin-left: auto;
+            background-color: var(--primary-color);
+        }
+        
+        .message-sender {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .message-text {
+            word-wrap: break-word;
+        }
+        
+        .message-time {
+            font-size: 12px;
+            text-align: right;
+            margin-top: 5px;
+            opacity: 0.7;
+        }
+        
+        .chat-input {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--dark-bg);
+            display: flex;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            background-color: #40444b;
+            color: var(--text-color);
+        }
+        
+        .chat-input button {
+            width: auto;
+            margin-left: 10px;
+            padding: 12px 20px;
+        }
+        
+        .online-users {
+            width: 250px;
+            background-color: #2f3136;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .online-users h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #40444b;
+        }
+        
+        .user-item {
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-item:hover {
+            background-color: rgba(114, 137, 218, 0.1);
+        }
+        
+        .user-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+        
+        .main-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logout-btn {
+            background-color: var(--error-color);
+            width: auto;
+            padding: 8px 15px;
+        }
+        
+        .logout-btn:hover {
+            background-color: #d83c3c;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <header class="header">
-            <h1 class="title"><i class="fas fa-mouse"></i> Epic Clicker</h1>
-            <div class="stats">
-                <div class="stat">
-                    <span class="stat-label">Кликов:</span>
-                    <span id="clicks">0</span>
+        <!-- Auth Container -->
+        <div class="auth-container" id="authContainer">
+            <div class="auth-form" id="loginForm">
+                <h2>Вход в мессенджер</h2>
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" placeholder="Введите ваш email">
                 </div>
-                <div class="stat">
-                    <span class="stat-label">В секунду:</span>
-                    <span id="cps">0</span>
+                <div class="form-group">
+                    <label for="loginPassword">Пароль</label>
+                    <input type="password" id="loginPassword" placeholder="Введите ваш пароль">
                 </div>
-                <div class="stat">
-                    <span class="stat-label">Уровень:</span>
-                    <span id="level">1</span>
+                <button id="loginBtn">Войти</button>
+                <div class="auth-switch">
+                    Нет аккаунта? <a id="switchToRegister">Зарегистрироваться</a>
                 </div>
+                <div class="error-message" id="loginError"></div>
             </div>
-        </header>
-
-        <main class="main-content">
-            <div class="click-area">
-                <div class="click-circle" id="clicker">
-                    <div class="click-inner">
-                        <span class="click-text">КЛИКАЙ!</span>
-                        <span class="click-value">+1</span>
-                    </div>
+            
+            <div class="auth-form" id="registerForm" style="display: none;">
+                <h2>Регистрация</h2>
+                <div class="form-group">
+                    <label for="registerName">Имя</label>
+                    <input type="text" id="registerName" placeholder="Введите ваше имя">
                 </div>
-                <div class="achievement-notification" id="achievement-notification">
-                    <i class="fas fa-trophy"></i>
-                    <span>Достижение разблокировано!</span>
+                <div class="form-group">
+                    <label for="registerEmail">Email</label>
+                    <input type="email" id="registerEmail" placeholder="Введите ваш email">
                 </div>
+                <div class="form-group">
+                    <label for="registerPassword">Пароль</label>
+                    <input type="password" id="registerPassword" placeholder="Придумайте пароль">
+                </div>
+                <div class="form-group">
+                    <label for="registerPasswordConfirm">Подтверждение пароля</label>
+                    <input type="password" id="registerPasswordConfirm" placeholder="Повторите пароль">
+                </div>
+                <button id="registerBtn">Зарегистрироваться</button>
+                <div class="auth-switch">
+                    Уже есть аккаунт? <a id="switchToLogin">Войти</a>
+                </div>
+                <div class="error-message" id="registerError"></div>
+                <div class="success-message" id="registerSuccess"></div>
             </div>
-
-            <div class="upgrades-section">
-                <h2><i class="fas fa-arrow-up"></i> Улучшения</h2>
-                <div class="upgrades-grid">
-                    <!-- Улучшения будут добавляться через JS -->
-                </div>
+        </div>
+        
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer">
+            <div class="online-users" id="onlineUsers">
+                <h3>Онлайн пользователи</h3>
+                <div id="usersList"></div>
             </div>
-
-            <div class="boosters-section">
-                <h2><i class="fas fa-bolt"></i> Бустеры</h2>
-                <div class="boosters-grid">
-                    <!-- Бустеры будут добавляться через JS -->
+            
+            <div class="main-chat">
+                <div class="chat-header">
+                    <h2>RealTime Messenger</h2>
+                    <button class="logout-btn" id="logoutBtn">Выйти</button>
                 </div>
-            </div>
-
-            <div class="achievements-section">
-                <h2><i class="fas fa-trophy"></i> Достижения</h2>
-                <div class="achievements-grid">
-                    <!-- Достижения будут добавляться через JS -->
+                
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Сообщения будут здесь -->
                 </div>
-            </div>
-        </main>
-
-        <div class="modal" id="prestige-modal">
-            <div class="modal-content">
-                <h2>Престиж</h2>
-                <p>Вы можете совершить престиж и получить бонусы для следующего прогона!</p>
-                <p>Текущий бонус: <span id="prestige-bonus">1.5x</span></p>
-                <button id="prestige-btn" class="prestige-btn">Совершить престиж</button>
-                <button id="close-modal" class="close-btn">Закрыть</button>
+                
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Введите ваше сообщение...">
+                    <button id="sendMessageBtn">Отправить</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="particles-container" id="particles"></div>
+    <script>
+        // Инициализация Supabase
+        const SUPABASE_URL = 'https://yvhqubpdgspanmibnivl.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_secret_x46g-J_R810j7LPW46VLng_k4QVNIl8';
 
-    <audio id="click-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" preload="auto"></audio>
-    <audio id="achievement-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" preload="auto"></audio>
-
-    <script src="script.js"></script>
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // DOM элементы
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const authContainer = document.getElementById('authContainer');
+        const chatContainer = document.getElementById('chatContainer');
+        const switchToRegister = document.getElementById('switchToRegister');
+        const switchToLogin = document.getElementById('switchToLogin');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginError = document.getElementById('loginError');
+        const registerError = document.getElementById('registerError');
+        const registerSuccess = document.getElementById('registerSuccess');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const usersList = document.getElementById('usersList');
+        
+        // Переключение между формами входа и регистрации
+        switchToRegister.addEventListener('click', () => {
+            loginForm.style.display = 'none';
+            registerForm.style.display = 'block';
+        });
+        
+        switchToLogin.addEventListener('click', () => {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+        
+        // Регистрация
+        registerBtn.addEventListener('click', async () => {
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+            
+            // Валидация
+            if (!name || !email || !password || !passwordConfirm) {
+                registerError.textContent = 'Все поля обязательны для заполнения';
+                return;
+            }
+            
+            if (password !== passwordConfirm) {
+                registerError.textContent = 'Пароли не совпадают';
+                return;
+            }
+            
+            if (password.length < 6) {
+                registerError.textContent = 'Пароль должен содержать не менее 6 символов';
+                return;
+            }
+            
+            try {
+                const { user, error } = await supabase.auth.signUp({
+                    email,
+                    password
+                });
+                
+                if (error) throw error;
+                
+                // Сохраняем имя пользователя в профиле
+                if (user) {
+                    const { error: profileError } = await supabase
+                        .from('profiles')
+                        .upsert({
+                            id: user.id,
+                            name: name,
+                            updated_at: new Date()
+                        });
+                    
+                    if (profileError) throw profileError;
+                }
+                
+                registerError.textContent = '';
+                registerSuccess.textContent = 'Регистрация успешна! Теперь вы можете войти.';
+                
+                // Очищаем форму
+                document.getElementById('registerName').value = '';
+                document.getElementById('registerEmail').value = '';
+                document.getElementById('registerPassword').value = '';
+                document.getElementById('registerPasswordConfirm').value = '';
+                
+                // Переключаем на форму входа
+                setTimeout(() => {
+                    registerForm.style.display = 'none';
+                    loginForm.style.display = 'block';
+                    registerSuccess.textContent = '';
+                }, 2000);
+                
+            } catch (error) {
+                registerError.textContent = error.message;
+            }
+        });
+        
+        // Вход
+        loginBtn.addEventListener('click', async () => {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (!email || !password) {
+                loginError.textContent = 'Заполните все поля';
+                return;
+            }
+            
+            try {
+                const { user, error } = await supabase.auth.signIn({
+                    email,
+                    password
+                });
+                
+                if (error) throw error;
+                
+                // Успешный вход
+                authContainer.style.display = 'none';
+                chatContainer.style.display = 'flex';
+                
+                // Загружаем сообщения и настраиваем real-time
+                loadMessages();
+                setupRealtime();
+                
+            } catch (error) {
+                loginError.textContent = error.message;
+            }
+        });
+        
+        // Выход
+        logoutBtn.addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            chatContainer.style.display = 'none';
+            authContainer.style.display = 'flex';
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        });
+        
+        // Отправка сообщения
+        sendMessageBtn.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        async function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (!messageText) return;
+            
+            const { data: { user } } = await supabase.auth.getUser();
+            
+            if (user) {
+                const { error } = await supabase
+                    .from('messages')
+                    .insert([
+                        { 
+                            user_id: user.id, 
+                            content: messageText 
+                        }
+                    ]);
+                
+                if (error) {
+                    console.error('Ошибка отправки сообщения:', error);
+                } else {
+                    messageInput.value = '';
+                }
+            }
+        }
+        
+        // Загрузка сообщений
+        async function loadMessages() {
+            const { data: messages, error } = await supabase
+                .from('messages')
+                .select(`
+                    id, 
+                    content, 
+                    created_at,
+                    profiles (name)
+                `)
+                .order('created_at', { ascending: true });
+            
+            if (error) {
+                console.error('Ошибка загрузки сообщений:', error);
+                return;
+            }
+            
+            chatMessages.innerHTML = '';
+            
+            messages.forEach(message => {
+                addMessageToChat(
+                    message.id,
+                    message.profiles.name,
+                    message.content,
+                    message.created_at,
+                    message.user_id === supabase.auth.user()?.id
+                );
+            });
+            
+            // Прокрутка вниз
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Добавление сообщения в чат
+        function addMessageToChat(id, sender, text, timestamp, isMyMessage = false) {
+            const messageEl = document.createElement('div');
+            messageEl.classList.add('message');
+            if (isMyMessage) messageEl.classList.add('my-message');
+            messageEl.dataset.id = id;
+            
+            const time = new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageEl.innerHTML = `
+                <div class="message-sender">${sender}</div>
+                <div class="message-text">${text}</div>
+                <div class="message-time">${time}</div>
+            `;
+            
+            chatMessages.appendChild(messageEl);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // Настройка real-time подписки на сообщения
+        function setupRealtime() {
+            // Подписка на новые сообщения
+            supabase
+                .channel('public:messages')
+                .on('postgres_changes', 
+                    { 
+                        event: 'INSERT', 
+                        schema: 'public', 
+                        table: 'messages' 
+                    }, 
+                    async (payload) => {
+                        // Получаем информацию об отправителе
+                        const { data: profile } = await supabase
+                            .from('profiles')
+                            .select('name')
+                            .eq('id', payload.new.user_id)
+                            .single();
+                        
+                        const isMyMessage = payload.new.user_id === supabase.auth.user()?.id;
+                        addMessageToChat(
+                            payload.new.id,
+                            profile.name,
+                            payload.new.content,
+                            payload.new.created_at,
+                            isMyMessage
+                        );
+                    }
+                )
+                .subscribe();
+            
+            // Подписка на онлайн пользователей
+            setupOnlineUsers();
+        }
+        
+        // Настройка отображения онлайн пользователей
+        async function setupOnlineUsers() {
+            // Получаем текущих пользователей
+            const { data: profiles, error } = await supabase
+                .from('profiles')
+                .select('id, name')
+                .order('name', { ascending: true });
+            
+            if (error) {
+                console.error('Ошибка загрузки пользователей:', error);
+                return;
+            }
+            
+            // Отображаем пользователей
+            usersList.innerHTML = '';
+            profiles.forEach(profile => {
+                const userEl = document.createElement('div');
+                userEl.classList.add('user-item');
+                
+                userEl.innerHTML = `
+                    <div class="user-avatar">${profile.name.charAt(0).toUpperCase()}</div>
+                    <div class="user-name">${profile.name}</div>
+                `;
+                
+                usersList.appendChild(userEl);
+            });
+        }
+        
+        // Проверка состояния аутентификации при загрузке
+        async function checkAuth() {
+            const { data: { session } } = await supabase.auth.getSession();
+            
+            if (session) {
+                authContainer.style.display = 'none';
+                chatContainer.style.display = 'flex';
+                loadMessages();
+                setupRealtime();
+            }
+        }
+        
+        // Инициализация приложения
+        checkAuth();
+    </script>
 </body>
 </html>
