@@ -3,412 +3,526 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RealTime Chat</title>
+    <title>SnowChat - Зимний чат</title>
     <style>
-        :root {
-            --primary-color: #4e54c8;
-            --secondary-color: #8f94fb;
-            --light-color: #f8f9fa;
-            --dark-color: #343a40;
-            --success-color: #28a745;
-            --danger-color: #dc3545;
-        }
-        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
-            background: linear-gradient(to right, #4e54c8, #8f94fb);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-        
+
+        #snowfall {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
         .container {
-            width: 90%;
-            max-width: 400px;
-            background-color: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .header {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        header {
             text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-        
-        .form-container {
-            padding: 20px;
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        
-        .form-group {
-            margin-bottom: 15px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: var(--dark-color);
-            font-weight: 500;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        
-        .btn {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-        
-        .btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-        
-        .form-footer {
-            text-align: center;
-            margin-top: 15px;
-        }
-        
-        .form-footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-        
-        .chat-container {
-            display: none;
+
+        .app {
+            display: flex;
             flex-direction: column;
-            height: 100vh;
-            width: 100%;
-            background-color: white;
+            gap: 20px;
         }
-        
+
+        @media (min-width: 768px) {
+            .app {
+                flex-direction: row;
+            }
+        }
+
+        .sidebar {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-container {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
         .chat-header {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
             padding: 15px 20px;
+            background: rgba(0, 0, 0, 0.4);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
+
         .chat-messages {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
-            background-color: #f5f7fb;
-        }
-        
-        .message {
-            margin-bottom: 15px;
+            height: 400px;
             display: flex;
             flex-direction: column;
+            gap: 15px;
         }
-        
-        .message-content {
-            padding: 10px 15px;
+
+        .message {
+            max-width: 80%;
+            padding: 12px 15px;
             border-radius: 18px;
-            max-width: 70%;
-            word-wrap: break-word;
+            margin-bottom: 10px;
+            animation: fadeIn 0.3s ease;
         }
-        
-        .my-message {
-            align-items: flex-end;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
-        .my-message .message-content {
-            background-color: var(--primary-color);
-            color: white;
+
+        .message.my-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            border-bottom-right-radius: 5px;
         }
-        
-        .other-message {
-            align-items: flex-start;
+
+        .message.other-message {
+            align-self: flex-start;
+            background: linear-gradient(135deg, #f46b45, #eea849);
+            border-bottom-left-radius: 5px;
         }
-        
-        .other-message .message-content {
-            background-color: #e5e5ea;
-            color: black;
-        }
-        
+
         .message-sender {
-            font-size: 12px;
+            font-weight: bold;
             margin-bottom: 5px;
-            color: #6c757d;
+            font-size: 0.9rem;
         }
-        
+
+        .message-text {
+            word-break: break-word;
+        }
+
+        .message-time {
+            font-size: 0.7rem;
+            text-align: right;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
         .chat-input {
-            padding: 15px;
-            background-color: white;
             display: flex;
-            border-top: 1px solid #eee;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            gap: 10px;
         }
-        
+
         .chat-input input {
             flex: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 25px;
-            margin-right: 10px;
-            font-size: 16px;
-        }
-        
-        .chat-input button {
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            color: white;
+            padding: 12px 15px;
             border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .chat-input button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            color: white;
+            font-weight: bold;
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            transition: transform 0.2s;
         }
-        
-        .online-users {
-            width: 250px;
-            background-color: white;
-            border-left: 1px solid #eee;
-            padding: 15px;
-            display: none;
+
+        .chat-input button:hover {
+            transform: scale(1.05);
         }
-        
+
         .user-list {
-            list-style: none;
+            margin-top: 20px;
         }
-        
+
+        .user-list h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
         .user-item {
-            padding: 10px;
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
-        
+
         .user-avatar {
             width: 35px;
             height: 35px;
-            background-color: var(--secondary-color);
             border-radius: 50%;
-            margin-right: 10px;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
             display: flex;
-            justify-content: center;
             align-items: center;
-            color: white;
+            justify-content: center;
+            margin-right: 10px;
             font-weight: bold;
         }
-        
-        .user-status {
+
+        .online-indicator {
             width: 10px;
             height: 10px;
-            background-color: var(--success-color);
             border-radius: 50%;
+            background: #4caf50;
             margin-left: auto;
         }
-        
-        @media (min-width: 768px) {
-            .chat-container {
-                width: 90%;
-                max-width: 1000px;
-                height: 90vh;
-                border-radius: 10px;
-                overflow: hidden;
-            }
-            
-            .online-users {
-                display: block;
-            }
+
+        .auth-forms {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .auth-forms input {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            font-size: 1rem;
+        }
+
+        .auth-forms button {
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #00b4db, #0083b0);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .auth-forms button:hover {
+            transform: scale(1.05);
+        }
+
+        .form-toggle {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .form-toggle a {
+            color: #00b4db;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        .chat-list {
+            margin-top: 20px;
+        }
+
+        .chat-list h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-item {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .chat-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .create-chat-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #f46b45, #eea849);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .create-chat-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .user-status {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .current-user {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .logout-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            margin-left: auto;
+            font-size: 0.8rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
+    <!-- Firebase App (основа Firebase SDK) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <!-- Firebase Database -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 </head>
 <body>
-    <!-- Форма регистрации -->
-    <div class="container" id="register-container">
-        <div class="header">
-            <h2>Регистрация</h2>
-        </div>
-        <div class="form-container">
-            <div class="form-group">
-                <label for="reg-name">Имя</label>
-                <input type="text" id="reg-name" placeholder="Введите ваше имя">
+    <div id="snowfall"></div>
+    
+    <div class="container">
+        <header>
+            <h1>❄️ SnowChat</h1>
+            <p>Общайтесь в реальном времени с зимним настроением!</p>
+        </header>
+        
+        <div class="app">
+            <div class="sidebar">
+                <div id="auth-container">
+                    <h2>Вход / Регистрация</h2>
+                    <div class="auth-forms">
+                        <input type="email" id="email" placeholder="Email">
+                        <input type="password" id="password" placeholder="Пароль">
+                        <button id="login-btn">Войти</button>
+                        <button id="signup-btn">Зарегистрироваться</button>
+                    </div>
+                </div>
+                
+                <div id="user-container" style="display: none;">
+                    <div class="user-status">
+                        <span class="current-user" id="current-user">Пользователь</span>
+                        <button class="logout-btn" id="logout-btn">Выйти</button>
+                    </div>
+                    
+                    <div class="user-list">
+                        <h3>👥 Пользователи онлайн</h3>
+                        <div id="online-users"></div>
+                    </div>
+                    
+                    <div class="chat-list">
+                        <h3>💬 Чаты</h3>
+                        <div id="chat-rooms"></div>
+                        <button class="create-chat-btn" id="create-chat-btn">+ Создать чат</button>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="reg-email">Email</label>
-                <input type="email" id="reg-email" placeholder="Введите ваш email">
+            
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h2 id="current-chat">Общий чат</h2>
+                    <span id="online-count">0 онлайн</span>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message other-message">
+                        <div class="message-sender">Система</div>
+                        <div class="message-text">Добро пожаловать в SnowChat! Начните общение прямо сейчас.</div>
+                        <div class="message-time">12:00</div>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="message-input" placeholder="Введите сообщение..." disabled>
+                    <button id="send-btn" disabled>Отправить</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="reg-password">Пароль</label>
-                <input type="password" id="reg-password" placeholder="Придумайте пароль">
-            </div>
-            <button class="btn" id="register-btn">Зарегистрироваться</button>
-            <div class="form-footer">
-                <p>Уже есть аккаунт? <a href="#" id="to-login">Войти</a></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Форма входа -->
-    <div class="container" id="login-container" style="display: none;">
-        <div class="header">
-            <h2>Вход</h2>
-        </div>
-        <div class="form-container">
-            <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="email" id="login-email" placeholder="Введите ваш email">
-            </div>
-            <div class="form-group">
-                <label for="login-password">Пароль</label>
-                <input type="password" id="login-password" placeholder="Введите ваш пароль">
-            </div>
-            <button class="btn" id="login-btn">Войти</button>
-            <div class="form-footer">
-                <p>Нет аккаунта? <a href="#" id="to-register">Зарегистрироваться</a></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Чат интерфейс -->
-    <div class="chat-container" id="chat-container">
-        <div class="chat-header">
-            <div>
-                <h3>RealTime Chat</h3>
-            </div>
-            <div>
-                <span id="current-user"></span>
-                <button id="logout-btn" style="background: none; border: none; color: white; margin-left: 15px; cursor: pointer;">Выйти</button>
-            </div>
-        </div>
-        <div style="display: flex; flex: 1;">
-            <div class="chat-messages" id="chat-messages">
-                <!-- Сообщения будут здесь -->
-            </div>
-            <div class="online-users">
-                <h4>Онлайн пользователи</h4>
-                <ul class="user-list" id="user-list">
-                    <!-- Список пользователей будет здесь -->
-                </ul>
-            </div>
-        </div>
-        <div class="chat-input">
-            <input type="text" id="message-input" placeholder="Введите сообщение...">
-            <button id="send-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="22" y1="2" x2="11" y2="13"></line>
-                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                </svg>
-            </button>
         </div>
     </div>
 
     <script>
+        // Инициализация Firebase
+        const firebaseConfig = {
+            // Здесь должен быть ваш конфиг Firebase
+            apiKey: "AIzaSyCW8vDV8JckT-CpshNDk8FZb12TP5bwCuM",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://messengare-tosha-default-rtdb.firebaseio.com/",
+            projectId: "messengare-tosha",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        // Инициализируйте Firebase с вашим конфигом
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+        
         // Элементы DOM
-        const registerContainer = document.getElementById('register-container');
-        const loginContainer = document.getElementById('login-container');
-        const chatContainer = document.getElementById('chat-container');
-        const toLoginLink = document.getElementById('to-login');
-        const toRegisterLink = document.getElementById('to-register');
-        const registerBtn = document.getElementById('register-btn');
+        const authContainer = document.getElementById('auth-container');
+        const userContainer = document.getElementById('user-container');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
         const loginBtn = document.getElementById('login-btn');
+        const signupBtn = document.getElementById('signup-btn');
         const logoutBtn = document.getElementById('logout-btn');
         const currentUserSpan = document.getElementById('current-user');
+        const onlineUsersDiv = document.getElementById('online-users');
+        const chatRoomsDiv = document.getElementById('chat-rooms');
+        const createChatBtn = document.getElementById('create-chat-btn');
+        const currentChatHeading = document.getElementById('current-chat');
+        const onlineCountSpan = document.getElementById('online-count');
+        const chatMessagesDiv = document.getElementById('chat-messages');
         const messageInput = document.getElementById('message-input');
         const sendBtn = document.getElementById('send-btn');
-        const chatMessages = document.getElementById('chat-messages');
-        const userList = document.getElementById('user-list');
-
-        // Переключение между формами
-        toLoginLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            registerContainer.style.display = 'none';
-            loginContainer.style.display = 'block';
-        });
-
-        toRegisterLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            loginContainer.style.display = 'none';
-            registerContainer.style.display = 'block';
-        });
-
-        // Регистрация
-        registerBtn.addEventListener('click', () => {
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value;
-            const password = document.getElementById('reg-password').value;
+        
+        // Текущий пользователь и выбранный чат
+        let currentUser = null;
+        let currentChat = "general";
+        
+        // Создание снежинок
+        function createSnowfall() {
+            const snowfall = document.getElementById('snowfall');
+            const snowflakes = 100;
             
-            if (!name || !email || !password) {
-                alert('Пожалуйста, заполните все поля');
-                return;
+            for (let i = 0; i < snowflakes; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.innerHTML = '❄';
+                snowflake.style.position = 'absolute';
+                snowflake.style.color = '#fff';
+                snowflake.style.fontSize = Math.random() * 15 + 10 + 'px';
+                snowflake.style.opacity = Math.random();
+                snowflake.style.top = '-50px';
+                snowflake.style.left = Math.random() * 100 + 'vw';
+                snowflake.style.animation = `fall ${Math.random() * 5 + 5}s linear infinite`;
+                snowflake.style.animationDelay = Math.random() * 5 + 's';
+                snowfall.appendChild(snowflake);
             }
             
-            // В реальном приложении здесь был бы запрос к серверу
-            // Для демонстрации просто сохраняем пользователя в localStorage
-            const user = {
-                name,
-                email,
-                password // В реальном приложении пароль должен быть захэширован
-            };
+            // Добавляем стили для анимации
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes fall {
+                    to {
+                        transform: translateY(100vh) rotate(360deg);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Регистрация
+        signupBtn.addEventListener('click', () => {
+            const email = emailInput.value;
+            const password = passwordInput.value;
             
-            localStorage.setItem('user', JSON.stringify(user));
-            alert('Регистрация успешна! Теперь вы можете войти.');
-            registerContainer.style.display = 'none';
-            loginContainer.style.display = 'block';
+            auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    currentUser = userCredential.user;
+                    updateUI();
+                })
+                .catch((error) => {
+                    alert("Ошибка регистрации: " + error.message);
+                });
         });
-
+        
         // Вход
         loginBtn.addEventListener('click', () => {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+            const email = emailInput.value;
+            const password = passwordInput.value;
             
-            if (!email || !password) {
-                alert('Пожалуйста, заполните все поля');
-                return;
-            }
-            
-            // В реальном приложении здесь был бы запрос к серверу
-            // Для демонстрации проверяем данные из localStorage
-            const storedUser = JSON.parse(localStorage.getItem('user'));
-            
-            if (storedUser && storedUser.email === email && storedUser.password === password) {
-                // Успешный вход
-                currentUserSpan.textContent = storedUser.name;
-                loginContainer.style.display = 'none';
-                chatContainer.style.display = 'flex';
-                
-                // Загрузка сообщений и подключение к WebSocket (в реальном приложении)
-                loadMessages();
-                simulateOnlineUsers();
-            } else {
-                alert('Неверный email или пароль');
-            }
+            auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    currentUser = userCredential.user;
+                    updateUI();
+                })
+                .catch((error) => {
+                    alert("Ошибка входа: " + error.message);
+                });
         });
-
+        
         // Выход
         logoutBtn.addEventListener('click', () => {
-            chatContainer.style.display = 'none';
-            loginContainer.style.display = 'block';
+            // Удаляем информацию о пользователе из базы данных перед выходом
+            if (currentUser) {
+                database.ref('onlineUsers/' + currentUser.uid).remove();
+            }
+            
+            auth.signOut()
+                .then(() => {
+                    currentUser = null;
+                    updateUI();
+                })
+                .catch((error) => {
+                    alert("Ошибка выхода: " + error.message);
+                });
         });
-
+        
+        // Создание чата
+        createChatBtn.addEventListener('click', () => {
+            const chatName = prompt("Введите название чата:");
+            if (chatName && chatName.trim() !== '') {
+                const chatId = 'chat-' + Date.now();
+                database.ref('chatRooms/' + chatId).set({
+                    name: chatName,
+                    createdBy: currentUser.uid,
+                    createdAt: Date.now()
+                });
+            }
+        });
+        
         // Отправка сообщения
         sendBtn.addEventListener('click', sendMessage);
         messageInput.addEventListener('keypress', (e) => {
@@ -416,114 +530,177 @@
                 sendMessage();
             }
         });
-
+        
         function sendMessage() {
             const messageText = messageInput.value.trim();
-            if (!messageText) return;
-            
-            const user = JSON.parse(localStorage.getItem('user'));
-            
-            // В реальном приложении здесь было бы отправление сообщения на сервер
-            // Для демонстрации просто добавляем сообщение в интерфейс
-            addMessageToChat(user.name, messageText, true);
-            
-            // Очищаем поле ввода
-            messageInput.value = '';
-            
-            // В реальном приложении здесь был бы ответ от другого пользователя через WebSocket
-            // Для демонстрации имитируем ответ через случайное время
-            setTimeout(() => {
-                const responses = [
-                    "Привет! Как дела?",
-                    "Очень интересно!",
-                    "Я тоже об этом думал...",
-                    "Согласен с тобой!",
-                    "Спасибо за информацию!"
-                ];
-                const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-                addMessageToChat("Случайный пользователь", randomResponse, false);
-            }, 1000 + Math.random() * 2000);
-        }
-
-        function addMessageToChat(sender, text, isMyMessage) {
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.classList.add(isMyMessage ? 'my-message' : 'other-message');
-            
-            if (!isMyMessage) {
-                const senderElement = document.createElement('div');
-                senderElement.classList.add('message-sender');
-                senderElement.textContent = sender;
-                messageElement.appendChild(senderElement);
+            if (messageText !== '' && currentUser) {
+                const messageId = database.ref('chats/' + currentChat + '/messages').push().key;
+                const messageData = {
+                    text: messageText,
+                    sender: currentUser.uid,
+                    senderName: currentUser.email.split('@')[0],
+                    timestamp: Date.now()
+                };
+                
+                database.ref('chats/' + currentChat + '/messages/' + messageId).set(messageData)
+                    .then(() => {
+                        messageInput.value = '';
+                    })
+                    .catch((error) => {
+                        alert("Ошибка отправки сообщения: " + error.message);
+                    });
             }
-            
-            const contentElement = document.createElement('div');
-            contentElement.classList.add('message-content');
-            contentElement.textContent = text;
-            messageElement.appendChild(contentElement);
-            
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            
-            // Сохраняем сообщение в localStorage
-            saveMessage(sender, text, isMyMessage);
         }
-
-        function saveMessage(sender, text, isMyMessage) {
-            const messages = JSON.parse(localStorage.getItem('messages') || '[]');
-            messages.push({
-                sender,
-                text,
-                isMyMessage,
-                timestamp: new Date().toISOString()
+        
+        // Обновление интерфейса
+        function updateUI() {
+            if (currentUser) {
+                authContainer.style.display = 'none';
+                userContainer.style.display = 'block';
+                messageInput.disabled = false;
+                sendBtn.disabled = false;
+                
+                currentUserSpan.textContent = currentUser.email.split('@')[0];
+                
+                // Добавляем пользователя в онлайн
+                database.ref('onlineUsers/' + currentUser.uid).set({
+                    email: currentUser.email,
+                    name: currentUser.email.split('@')[0],
+                    lastOnline: Date.now()
+                });
+                
+                // Загружаем чаты и сообщения
+                loadChatRooms();
+                loadMessages();
+                loadOnlineUsers();
+            } else {
+                authContainer.style.display = 'block';
+                userContainer.style.display = 'none';
+                messageInput.disabled = true;
+                sendBtn.disabled = true;
+            }
+        }
+        
+        // Загрузка чатов
+        function loadChatRooms() {
+            database.ref('chatRooms').on('value', (snapshot) => {
+                chatRoomsDiv.innerHTML = '';
+                
+                snapshot.forEach((childSnapshot) => {
+                    const chat = childSnapshot.val();
+                    const chatId = childSnapshot.key;
+                    
+                    const chatItem = document.createElement('div');
+                    chatItem.className = 'chat-item';
+                    chatItem.textContent = chat.name;
+                    chatItem.addEventListener('click', () => {
+                        currentChat = chatId;
+                        currentChatHeading.textContent = chat.name;
+                        loadMessages();
+                    });
+                    
+                    chatRoomsDiv.appendChild(chatItem);
+                });
+                
+                // Добавляем общий чат
+                const generalChat = document.createElement('div');
+                generalChat.className = 'chat-item';
+                generalChat.textContent = 'Общий чат';
+                generalChat.addEventListener('click', () => {
+                    currentChat = "general";
+                    currentChatHeading.textContent = "Общий чат";
+                    loadMessages();
+                });
+                chatRoomsDiv.prepend(generalChat);
             });
-            localStorage.setItem('messages', JSON.stringify(messages));
         }
-
+        
+        // Загрузка сообщений
         function loadMessages() {
-            chatMessages.innerHTML = '';
-            const messages = JSON.parse(localStorage.getItem('messages') || '[]');
-            const user = JSON.parse(localStorage.getItem('user'));
+            chatMessagesDiv.innerHTML = '';
             
-            messages.forEach(message => {
-                const isMyMessage = message.sender === user.name;
-                addMessageToChat(message.sender, message.text, isMyMessage);
+            database.ref('chats/' + currentChat + '/messages').orderByChild('timestamp').limitToLast(50).on('value', (snapshot) => {
+                chatMessagesDiv.innerHTML = '';
+                
+                snapshot.forEach((childSnapshot) => {
+                    const message = childSnapshot.val();
+                    displayMessage(message);
+                });
+                
+                // Прокрутка вниз
+                chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
             });
         }
-
-        function simulateOnlineUsers() {
-            // В реальном приложении этот список приходил бы с сервера
-            const users = [
-                { name: "Алексей", online: true },
-                { name: "Мария", online: true },
-                { name: "Дмитрий", online: true },
-                { name: "Анна", online: false },
-                { name: "Иван", online: true }
-            ];
+        
+        // Отображение сообщения
+        function displayMessage(message) {
+            const messageDiv = document.createElement('div');
+            const isMyMessage = currentUser && message.sender === currentUser.uid;
             
-            userList.innerHTML = '';
-            users.forEach(user => {
-                if (!user.online) return;
+            messageDiv.className = `message ${isMyMessage ? 'my-message' : 'other-message'}`;
+            
+            const time = new Date(message.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            messageDiv.innerHTML = `
+                <div class="message-sender">${isMyMessage ? 'Вы' : message.senderName}</div>
+                <div class="message-text">${message.text}</div>
+                <div class="message-time">${time}</div>
+            `;
+            
+            chatMessagesDiv.appendChild(messageDiv);
+        }
+        
+        // Загрузка онлайн пользователей
+        function loadOnlineUsers() {
+            database.ref('onlineUsers').on('value', (snapshot) => {
+                onlineUsersDiv.innerHTML = '';
+                let onlineCount = 0;
                 
-                const userItem = document.createElement('li');
-                userItem.classList.add('user-item');
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    onlineCount++;
+                    
+                    // Проверяем, был ли пользователь онлайн в последние 30 секунд
+                    if (Date.now() - user.lastOnline < 30000) {
+                        const userItem = document.createElement('div');
+                        userItem.className = 'user-item';
+                        
+                        userItem.innerHTML = `
+                            <div class="user-avatar">${user.name.charAt(0).toUpperCase()}</div>
+                            <div>${user.name}</div>
+                            <div class="online-indicator"></div>
+                        `;
+                        
+                        onlineUsersDiv.appendChild(userItem);
+                    }
+                });
                 
-                const avatar = document.createElement('div');
-                avatar.classList.add('user-avatar');
-                avatar.textContent = user.name.charAt(0);
-                
-                const name = document.createElement('span');
-                name.textContent = user.name;
-                
-                const status = document.createElement('div');
-                status.classList.add('user-status');
-                
-                userItem.appendChild(avatar);
-                userItem.appendChild(name);
-                userItem.appendChild(status);
-                userList.appendChild(userItem);
+                onlineCountSpan.textContent = `${onlineCount} онлайн`;
             });
         }
+        
+        // Обновление времени последней активности
+        function updateLastOnline() {
+            if (currentUser) {
+                database.ref('onlineUsers/' + currentUser.uid).update({
+                    lastOnline: Date.now()
+                });
+            }
+        }
+        
+        // Инициализация
+        window.addEventListener('load', () => {
+            createSnowfall();
+            
+            // Слушатель изменения состояния аутентификации
+            auth.onAuthStateChanged((user) => {
+                currentUser = user;
+                updateUI();
+            });
+            
+            // Обновляем статус онлайн каждые 10 секунд
+            setInterval(updateLastOnline, 10000);
+        });
     </script>
 </body>
 </html>
